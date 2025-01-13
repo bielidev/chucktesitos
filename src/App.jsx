@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react';
+import axios from 'axios'; // Importa correctamente axios
+
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const baseURL = "https://api.chucknorris.io/jokes/random"
 
+function App() {
+  const [joke, setJoke] = useState(null);
+
+  useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setJoke(response.data);
+    }).catch((error) => {
+      console.error("Error fetching joke:", error);
+    });
+  }, []); 
+
+  
+  function createJoke() {
+    axios.get(baseURL).then((response) => {
+      setJoke(response.data);
+    }).catch((error) => {
+      console.error("Error fetching joke:", error);
+    });
+  }
+
+ 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+     <div id="main"> 
+     {joke ? (
+        <>
+          <h1>{joke.title || "Chucktesitos"}</h1> {"Bienvenidos"}
+          <p>{joke.value}</p>
+        </>
+      ) : (
+        <p>Cargando chiste...</p>
+      )}
+
+      <button onClick={createJoke}>Otro chiste</button>
+
+      <img src="https://elcomercio.pe/resizer/M_mNrwwYmqgaIWUC4Oc-JTnfgQ4=/640x0/smart/filters:format(jpeg):quality(75)/arc-anglerfish-arc2-prod-elcomercio.s3.amazonaws.com/public/6GGAVWLXRBBUVOELPYKI2FHVSQ.jpg"  />
+     </div>
+
     </>
-  )
+  );
 }
 
-export default App
+export default App;
